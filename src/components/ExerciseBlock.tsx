@@ -1,5 +1,6 @@
 import type { Exercise } from "@/types/workout";
 import SetRow from "@/components/SetRow";
+import AddSetForm from "./AddSetForm";
 
 type ExerciseBlockProps = {
     exercise : Exercise;
@@ -25,6 +26,8 @@ export default function ExerciseBlock( { exercise }: ExerciseBlockProps) {
                     />
                 ))}
             </ol>
+
+            <AddSetForm />
         </article>
     )
 }
