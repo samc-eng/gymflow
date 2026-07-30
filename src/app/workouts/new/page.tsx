@@ -1,5 +1,7 @@
 import { mockWorkout } from "@/lib/mock-workout";
 import ExerciseBlock from "@/components/ExerciseBlock";
+import WorkoutFeeling from "@/components/WorkoutFeeling";
+
 
 export default function NewWorkoutPage() {
   const workout = mockWorkout;
@@ -8,10 +10,7 @@ export default function NewWorkoutPage() {
     <main>
       <h1>{workout.name}</h1>
 
-      <section>
-        <p>Énergie : {workout.energy} / 5</p>
-        <p>Sommeil : {workout.sleep} / 5</p>
-      </section>
+      <WorkoutFeeling energy={workout.energy} sleep={workout.sleep} />
 
       {workout.exercises.map((exercise) => (
         <ExerciseBlock key={exercise.id} exercise={exercise} />
