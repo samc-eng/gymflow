@@ -1,18 +1,27 @@
 "use client";
 
 import { useState } from "react";
+import type { WorkoutSet } from "@/types/workout";
 
-export default function AddSetForm() {
+type AddSetFormProps = {
+  onAdd: (newSet: WorkoutSet) => void;
+};
+
+export default function AddSetForm({ onAdd }: AddSetFormProps) {
   const [reps, setReps] = useState("");
   const [weight, setWeight] = useState("");
   const [rpe, setRpe] = useState("");
 
   function handleAdd() {
-    console.log({
+    onAdd({
+      id: crypto.randomUUID(),
       reps: Number(reps),
       displayedWeight: Number(weight),
       rpe: Number(rpe),
     });
+    setReps("");
+    setWeight("");
+    setRpe("");
   }
 
   return (
