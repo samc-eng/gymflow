@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { mockWorkout } from "@/lib/mock-workout";
+import { saveDraft, loadDraft } from "@/lib/workout-storage";
 import ExerciseBlock from "@/components/ExerciseBlock";
 import WorkoutFeeling from "@/components/WorkoutFeeling";
 import AddExerciseForm from "@/components/AddExerciseForm";
@@ -9,6 +10,15 @@ import type { Exercise, WorkoutSet } from "@/types/workout";
 
 export default function NewWorkoutPage() {
   const [workout, setWorkout] = useState(mockWorkout);
+
+  useEffect(() => {
+    const draft = loadDraft();
+    if (draft) setWorkout(draft);
+  }, []);
+
+  useEffect(() => {
+    saveDraft(workout);
+  }, [workout]);
 
   function addSet(exerciseId: string, newSet: WorkoutSet) {
     setWorkout({
