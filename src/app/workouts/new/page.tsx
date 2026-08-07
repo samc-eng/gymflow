@@ -4,7 +4,8 @@ import { useState } from "react";
 import { mockWorkout } from "@/lib/mock-workout";
 import ExerciseBlock from "@/components/ExerciseBlock";
 import WorkoutFeeling from "@/components/WorkoutFeeling";
-import type { WorkoutSet } from "@/types/workout";
+import AddExerciseForm from "@/components/AddExerciseForm";
+import type { Exercise, WorkoutSet } from "@/types/workout";
 
 export default function NewWorkoutPage() {
   const [workout, setWorkout] = useState(mockWorkout);
@@ -20,6 +21,20 @@ export default function NewWorkoutPage() {
     });
   }
 
+  function addExercise(name: string) {
+    const newExercise: Exercise = {
+      id: crypto.randomUUID(),
+      name: name,
+      machine: null,
+      sets: [],
+    };
+
+    setWorkout({
+      ...workout,
+      exercises: [...workout.exercises, newExercise],
+    });
+  }
+
   return (
     <main>
       <h1>{workout.name}</h1>
@@ -29,6 +44,8 @@ export default function NewWorkoutPage() {
       {workout.exercises.map((exercise) => (
         <ExerciseBlock key={exercise.id} exercise={exercise} onAddSet={addSet} />
       ))}
+
+      <AddExerciseForm onAdd={addExercise} />
 
       <button>Terminer la séance</button>
     </main>
