@@ -2,14 +2,16 @@
 
 import { useState, useEffect } from "react";
 import { mockWorkout } from "@/lib/mock-workout";
-import { saveDraft, loadDraft } from "@/lib/workout-storage";
+import { saveDraft, loadDraft, archiveWorkout } from "@/lib/workout-storage";
 import ExerciseBlock from "@/components/ExerciseBlock";
 import WorkoutFeeling from "@/components/WorkoutFeeling";
 import AddExerciseForm from "@/components/AddExerciseForm";
+import FinishWorkoutDialog from "@/components/FinishWorkoutDialog";
 import type { Exercise, WorkoutSet } from "@/types/workout";
 
 export default function NewWorkoutPage() {
   const [workout, setWorkout] = useState(mockWorkout);
+  const [isFinishing, setIsFinishing] = useState(false);
 
   useEffect(() => {
     const draft = loadDraft();
@@ -45,11 +47,16 @@ export default function NewWorkoutPage() {
     });
   }
 
+  function finishWorkout(energyAfter: number) {
+    archiveWorkout({ ...workout, energyAfter: energyAfter });
+    setIsFinishing(false);
+  }
+
   return (
     <main>
       <h1>{workout.name}</h1>
 
-      <WorkoutFeeling energy={workout.energy} sleep={workout.sleep} />
+      <WorkoutFeeling energy={workout.energyBefore} sleep={workout.sleep} />
 
       {workout.exercises.map((exercise) => (
         <ExerciseBlock key={exercise.id} exercise={exercise} onAddSet={addSet} />
@@ -57,7 +64,14 @@ export default function NewWorkoutPage() {
 
       <AddExerciseForm onAdd={addExercise} />
 
-      <button>Terminer la séance</button>
+      <button onClick={() => setIsFinishing(true)}>Terminer la séance</button>
+
+      {isFinishing && (
+        <FinishWorkoutDialog
+          onConfirm={finishWorkout}
+          onCancel={() => setIsFinishing(false)}
+        />
+      )}
     </main>
   );
 }

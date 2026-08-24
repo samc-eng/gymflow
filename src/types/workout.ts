@@ -24,7 +24,8 @@ export type Workout = {
   id: string;
   name: string;
   startedAt: Date;
-  energy: number;
+  energyBefore: number;
+  energyAfter : number | null;
   sleep: number;
   exercises: Exercise[];
 };

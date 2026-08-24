@@ -3,9 +3,10 @@ import type { Workout } from "@/types/workout";
 const DRAFT_KEY = "gymflow:draft";
 const HISTORY_KEY = "gymflow:history";
 
-function parseWorkout(raw: string): Workout {
-  const workout = JSON.parse(raw);
-  return { ...workout, startedAt: new Date(workout.startedAt) };
+type StoredWorkout = Omit<Workout, "startedAt"> & { startedAt: string };
+
+function reviveWorkout(stored: StoredWorkout): Workout {
+  return { ...stored, startedAt: new Date(stored.startedAt) };
 }
 
 export function saveDraft(workout: Workout): void {
@@ -14,7 +15,7 @@ export function saveDraft(workout: Workout): void {
 
 export function loadDraft(): Workout | null {
   const raw = localStorage.getItem(DRAFT_KEY);
-  return raw ? parseWorkout(raw) : null;
+  return raw ? reviveWorkout(JSON.parse(raw)) : null;
 }
 
 export function clearDraft(): void {
@@ -23,7 +24,7 @@ export function clearDraft(): void {
 
 export function loadHistory(): Workout[] {
   const raw = localStorage.getItem(HISTORY_KEY);
-  return raw ? JSON.parse(raw).map(parseWorkout) : [];
+  return raw ? JSON.parse(raw).map(reviveWorkout) : [];
 }
 
 export function archiveWorkout(workout: Workout): void {
