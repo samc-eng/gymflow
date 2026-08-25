@@ -1,17 +1,18 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { mockWorkout } from "@/lib/mock-workout";
+import { createWorkout } from "@/lib/workout";
 import { saveDraft, loadDraft, archiveWorkout } from "@/lib/workout-storage";
 import ExerciseBlock from "@/components/ExerciseBlock";
 import WorkoutFeeling from "@/components/WorkoutFeeling";
 import AddExerciseForm from "@/components/AddExerciseForm";
 import FinishWorkoutDialog from "@/components/FinishWorkoutDialog";
-import type { Exercise, WorkoutSet } from "@/types/workout";
+import type { Exercise, Workout, WorkoutSet } from "@/types/workout";
 
 export default function NewWorkoutPage() {
-  const [workout, setWorkout] = useState(mockWorkout);
+  const [workout, setWorkout] = useState<Workout | null>(null);
   const [isFinishing, setIsFinishing] = useState(false);
+  const [name, setName] = useState("");
 
   useEffect(() => {
     const draft = loadDraft();
@@ -19,10 +20,16 @@ export default function NewWorkoutPage() {
   }, []);
 
   useEffect(() => {
-    saveDraft(workout);
+    if (workout) saveDraft(workout);
   }, [workout]);
 
+  function startWorkout() {
+    if (name.trim() === "") return;
+    setWorkout(createWorkout(name));
+  }
+
   function addSet(exerciseId: string, newSet: WorkoutSet) {
+    if (!workout) return;
     setWorkout({
       ...workout,
       exercises: workout.exercises.map((exercise) =>
@@ -33,14 +40,14 @@ export default function NewWorkoutPage() {
     });
   }
 
-  function addExercise(name: string) {
+  function addExercise(exerciseName: string) {
+    if (!workout) return;
     const newExercise: Exercise = {
       id: crypto.randomUUID(),
-      name: name,
+      name: exerciseName,
       machine: null,
       sets: [],
     };
-
     setWorkout({
       ...workout,
       exercises: [...workout.exercises, newExercise],
@@ -48,8 +55,26 @@ export default function NewWorkoutPage() {
   }
 
   function finishWorkout(energyAfter: number) {
-    archiveWorkout({ ...workout, energyAfter: energyAfter });
+    if (!workout) return;
+    archiveWorkout({ ...workout, energyAfter });
     setIsFinishing(false);
+    setWorkout(null);
+    setName("");
+  }
+
+  if (!workout) {
+    return (
+      <main>
+        <h1>Nouvelle séance</h1>
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="nom de la séance"
+        />
+        <button onClick={startWorkout}>Commencer</button>
+      </main>
+    );
   }
 
   return (
