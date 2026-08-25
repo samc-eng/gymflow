@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { createWorkout } from "@/lib/workout";
+import Link from "next/link";
 import { saveDraft, loadDraft, archiveWorkout } from "@/lib/workout-storage";
 import ExerciseBlock from "@/components/ExerciseBlock";
 import WorkoutFeeling from "@/components/WorkoutFeeling";
@@ -12,7 +12,6 @@ import type { Exercise, Workout, WorkoutSet } from "@/types/workout";
 export default function NewWorkoutPage() {
   const [workout, setWorkout] = useState<Workout | null>(null);
   const [isFinishing, setIsFinishing] = useState(false);
-  const [name, setName] = useState("");
 
   useEffect(() => {
     const draft = loadDraft();
@@ -22,11 +21,6 @@ export default function NewWorkoutPage() {
   useEffect(() => {
     if (workout) saveDraft(workout);
   }, [workout]);
-
-  function startWorkout() {
-    if (name.trim() === "") return;
-    setWorkout(createWorkout(name));
-  }
 
   function addSet(exerciseId: string, newSet: WorkoutSet) {
     if (!workout) return;
@@ -59,20 +53,14 @@ export default function NewWorkoutPage() {
     archiveWorkout({ ...workout, energyAfter });
     setIsFinishing(false);
     setWorkout(null);
-    setName("");
   }
 
   if (!workout) {
     return (
       <main>
-        <h1>Nouvelle séance</h1>
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="nom de la séance"
-        />
-        <button onClick={startWorkout}>Commencer</button>
+        <p>Aucune séance en cours.</p>
+        <p>Utilise le bouton + pour en démarrer une.</p>
+        <Link href="/workouts">Voir l&apos;historique</Link>
       </main>
     );
   }

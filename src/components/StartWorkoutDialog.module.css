@@ -1,0 +1,21 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 100;
+}
+
+.dialog {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 90%;
+  max-width: 400px;
+  padding: 1.5rem;
+  border-radius: 12px;
+  background: #fff;
+  color: #111;
+}
