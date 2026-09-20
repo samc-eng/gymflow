@@ -18,11 +18,14 @@ _Dernière mise à jour : 8/09/2026_
 - /profile — langue, unités kg/lbs
 - /progress — courbes (à faire en dernier, besoin de vraies données)
 - Catalogue de machines et facteur de poulie à la saisie
-- PostgreSQL + Prisma, puis Auth.js
-- Module ML
+- Back Django + DRF (env. Python, API REST), PostgreSQL via l'ORM Django
+- Migration du stockage : lib/ passe de localStorage à fetch vers l'API
+- Authentification (django.contrib.auth + jetons côté front)
+- Module ML (Python, même back)
 
 ## Décisions prises
 - Un formulaire remonte la saisie brute ; le détenteur de l'état fabrique l'objet métier
 - Entre deux écrans, une donnée passe par le stockage, jamais par la navigation
 - lib/ fournit, components/ affiche, app/ ne contient que des routes
 - Pas de version PC séparée : un seul code responsive
+- Front React/Next + back Django séparés, communication HTTP/JSON — pas de couche serveur Next.js
