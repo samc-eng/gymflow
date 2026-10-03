@@ -8,14 +8,18 @@ import WorkoutFeeling from "@/components/WorkoutFeeling";
 import AddExerciseForm from "@/components/AddExerciseForm";
 import FinishWorkoutDialog from "@/components/FinishWorkoutDialog";
 import type { Exercise, Workout, WorkoutSet } from "@/types/workout";
+import { loadSettings, DEFAULT_SETTINGS } from "@/lib/settings-storage";
+import type { WeightUnit } from "@/types/settings";
 
 export default function NewWorkoutPage() {
   const [workout, setWorkout] = useState<Workout | null>(null);
   const [isFinishing, setIsFinishing] = useState(false);
+  const [weightUnit, setWeightUnit] = useState<WeightUnit>(DEFAULT_SETTINGS.weightUnit);
 
   useEffect(() => {
     const draft = loadDraft();
     if (draft) setWorkout(draft);
+    setWeightUnit(loadSettings().weightUnit);
   }, []);
 
   useEffect(() => {
@@ -72,7 +76,7 @@ export default function NewWorkoutPage() {
       <WorkoutFeeling energy={workout.energyBefore} sleep={workout.sleep} />
 
       {workout.exercises.map((exercise) => (
-        <ExerciseBlock key={exercise.id} exercise={exercise} onAddSet={addSet} />
+        <ExerciseBlock key={exercise.id} exercise={exercise} onAddSet={addSet}  weightUnit={weightUnit}/>
       ))}
 
       <AddExerciseForm onAdd={addExercise} />

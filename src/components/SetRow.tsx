@@ -1,20 +1,27 @@
 import type { Machine, WorkoutSet } from "@/types/workout";
-import { getRealWeight } from "@/lib/weight";
+import type { WeightUnit } from "@/types/settings";
+import { getRealWeight, fromKg } from "@/lib/weight";
 
 type SetRowProps = {
   index: number;
   set: WorkoutSet;
   machine: Machine | null;
+  weightUnit: WeightUnit;
 };
 
-export default function SetRow({ index, set, machine }: SetRowProps) {
+function formatWeight(kg: number, unit: WeightUnit): string {
+  const value = Math.round(fromKg(kg, unit) * 10) / 10;
+  return `${value} ${unit}`;
+}
+
+export default function SetRow({ index, set, machine, weightUnit }: SetRowProps) {
   const realWeight = getRealWeight(set.displayedWeight, machine);
   const hasPulley = realWeight !== set.displayedWeight;
 
   return (
     <li>
-      {index + 1}. {set.reps} reps × {set.displayedWeight} kg
-      {hasPulley && <em> (soit {realWeight} kg réels)</em>} — RPE {set.rpe}
+      {index + 1}. {set.reps} reps × {formatWeight(set.displayedWeight, weightUnit)}
+      {hasPulley && <em> (soit {formatWeight(realWeight, weightUnit)} réels)</em>} — RPE {set.rpe}
     </li>
   );
 }

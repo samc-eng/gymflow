@@ -5,13 +5,17 @@ import { useParams, notFound } from "next/navigation";
 import { loadWorkout } from "@/lib/workout-storage";
 import type { Workout } from "@/types/workout";
 import ExerciseView from "@/components/ExerciseView";
+import { loadSettings, DEFAULT_SETTINGS } from "@/lib/settings-storage";
+import type { WeightUnit } from "@/types/settings";
 
 export default function WorkoutDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [workout, setWorkout] = useState<Workout | null | undefined>(undefined);
+  const [weightUnit, setWeightUnit] = useState<WeightUnit>(DEFAULT_SETTINGS.weightUnit);
 
   useEffect(() => {
     setWorkout(loadWorkout(id));
+    setWeightUnit(loadSettings().weightUnit);
   }, [id]);
 
   if (workout === undefined) {
@@ -44,8 +48,7 @@ export default function WorkoutDetailPage() {
 
       {workout.exercises.map((exercise) => (
       <article key={exercise.id}>
-        <ExerciseView exercise={exercise} />
-      </article>
+      <ExerciseView exercise={exercise} weightUnit={weightUnit} />      </article>
     ))}
     </main>
   );
