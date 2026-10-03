@@ -1,5 +1,5 @@
 import type { Exercise, WorkoutSet } from "@/types/workout";
-import SetRow from "@/components/SetRow";
+import ExerciseView from "@/components/ExerciseView";
 import AddSetForm from "@/components/AddSetForm";
 
 type ExerciseBlockProps = {
@@ -10,25 +10,7 @@ type ExerciseBlockProps = {
 export default function ExerciseBlock({ exercise, onAddSet }: ExerciseBlockProps) {
   return (
     <article>
-      <h2>{exercise.name}</h2>
-
-      {exercise.machine && (
-        <p>
-          {exercise.machine.name} · poulie ×{exercise.machine.pulleyFactor}
-        </p>
-      )}
-
-      <ol>
-        {exercise.sets.map((set, index) => (
-          <SetRow
-            key={set.id}
-            index={index}
-            set={set}
-            machine={exercise.machine}
-          />
-        ))}
-      </ol>
-
+      <ExerciseView exercise={exercise} />
       <AddSetForm onAdd={(newSet) => onAddSet(exercise.id, newSet)} />
     </article>
   );
