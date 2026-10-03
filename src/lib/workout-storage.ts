@@ -32,3 +32,7 @@ export function archiveWorkout(workout: Workout): void {
   localStorage.setItem(HISTORY_KEY, JSON.stringify([...history, workout]));
   clearDraft();
 }
+
+export function loadWorkout(id: string): Workout | null {
+  return loadHistory().find(w => w.id === id) ?? null;
+}
